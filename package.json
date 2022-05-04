@@ -1,0 +1,17 @@
+{
+  "name": "constructor-sandbox",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^28.0.3"
+  },
+  "scripts": {
+    "test": "jest ./src",
+    "tscw": "tsc --watch"
+  },
+  "dependencies": {
+    "@types/jest": "^27.5.0",
+    "typescript": "^4.6.4"
+  }
+}
