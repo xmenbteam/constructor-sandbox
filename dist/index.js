@@ -10,42 +10,56 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _Instrument__player, _Instrument__password;
+var _Instrument_family, _Instrument_player, _Instrument_password;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Clarinet = void 0;
 class Instrument {
     constructor(player, family, password) {
-        _Instrument__player.set(this, void 0);
-        _Instrument__password.set(this, void 0);
-        this._family = family;
-        __classPrivateFieldSet(this, _Instrument__player, player, "f");
-        __classPrivateFieldSet(this, _Instrument__password, password, "f");
+        _Instrument_family.set(this, void 0);
+        _Instrument_player.set(this, void 0);
+        _Instrument_password.set(this, void 0);
+        __classPrivateFieldSet(this, _Instrument_family, family, "f");
+        __classPrivateFieldSet(this, _Instrument_player, player, "f");
+        __classPrivateFieldSet(this, _Instrument_password, password, "f");
     }
     get player() {
-        return `${__classPrivateFieldGet(this, _Instrument__player, "f")} owns this instrument!`;
+        return `${__classPrivateFieldGet(this, _Instrument_player, "f")} owns this instrument!`;
     }
     set player(value) {
-        __classPrivateFieldSet(this, _Instrument__player, value, "f");
+        __classPrivateFieldSet(this, _Instrument_player, value, "f");
     }
     get password() {
-        return __classPrivateFieldGet(this, _Instrument__password, "f");
+        return __classPrivateFieldGet(this, _Instrument_password, "f");
+    }
+    //   set family(value: Family) {
+    //     this.#family = value;
+    //   }
+    get family() {
+        return __classPrivateFieldGet(this, _Instrument_family, "f");
     }
     changePlayerName(cred) {
         if (cred.role === "admin") {
-            console.log(__classPrivateFieldGet(this, _Instrument__player, "f"), cred.newPlayer);
             this.player = cred.newPlayer;
         }
         else
             throw new Error("Not admin!");
     }
     returnPassword(cred) {
-        if (cred.Role === "admin" || cred.name === __classPrivateFieldGet(this, _Instrument__player, "f"))
+        if (cred.role === "admin" || cred.name === __classPrivateFieldGet(this, _Instrument_player, "f"))
             return this.password;
         else
             throw new Error("You don't have permission!");
     }
+    changePassword(cred, oldPassword, newPassword) {
+        if ((cred.role === "admin" || cred.name === __classPrivateFieldGet(this, _Instrument_player, "f")) &&
+            oldPassword === __classPrivateFieldGet(this, _Instrument_password, "f")) {
+            __classPrivateFieldSet(this, _Instrument_password, newPassword, "f");
+        }
+        else
+            throw new Error("Nope");
+    }
 }
-_Instrument__player = new WeakMap(), _Instrument__password = new WeakMap();
+_Instrument_family = new WeakMap(), _Instrument_player = new WeakMap(), _Instrument_password = new WeakMap();
 class Clarinet extends Instrument {
     play() {
         return "Blow!";
@@ -60,4 +74,9 @@ const credentials = {
     role: "admin",
     newPlayer: "Dave",
 };
-console.log(clarinet);
+const oldPassword = "password";
+const newPassword = "newPassword";
+console.log(clarinet.returnPassword(credentials));
+clarinet.changePassword(credentials, oldPassword, newPassword);
+console.log(clarinet.returnPassword(credentials));
+// console.log(clarinet);

@@ -2,42 +2,56 @@ type Family = "woodwind" | "brass" | "string" | "percussion";
 type Cred = { [key: string]: string };
 
 abstract class Instrument {
-  readonly _family: Family;
-  #_player: string;
-  #_password: string;
+  readonly #family: Family;
+  #player: string;
+  #password: string;
 
   get player() {
-    return `${this.#_player} owns this instrument!`;
+    return `${this.#player} owns this instrument!`;
   }
 
   set player(value: string) {
-    this.#_player = value;
+    this.#player = value;
   }
 
   get password() {
-    return this.#_password;
+    return this.#password;
+  }
+  //   set family(value: Family) {
+  //     this.#family = value;
+  //   }
+
+  get family() {
+    return this.#family;
   }
 
   changePlayerName(cred: Cred) {
     if (cred.role === "admin") {
-      console.log(this.#_player, cred.newPlayer);
-
       this.player = cred.newPlayer;
     } else throw new Error("Not admin!");
   }
 
   returnPassword(cred: Cred) {
-    if (cred.Role === "admin" || cred.name === this.#_player)
+    if (cred.role === "admin" || cred.name === this.#player)
       return this.password;
     else throw new Error("You don't have permission!");
+  }
+
+  changePassword(cred: Cred, oldPassword: string, newPassword: string) {
+    if (
+      (cred.role === "admin" || cred.name === this.#player) &&
+      oldPassword === this.#password
+    ) {
+      this.#password = newPassword;
+    } else throw new Error("Nope");
   }
 
   abstract play(): string;
 
   constructor(player: string, family: Family, password: string) {
-    this._family = family;
-    this.#_player = player;
-    this.#_password = password;
+    this.#family = family;
+    this.#player = player;
+    this.#password = password;
   }
 }
 
@@ -58,4 +72,13 @@ const credentials = {
   newPlayer: "Dave",
 };
 
-console.log(clarinet);
+const oldPassword = "password";
+const newPassword = "newPassword";
+
+console.log(clarinet.returnPassword(credentials));
+
+clarinet.changePassword(credentials, oldPassword, newPassword);
+
+console.log(clarinet.returnPassword(credentials));
+
+// console.log(clarinet);
